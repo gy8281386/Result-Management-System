@@ -1,0 +1,13 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Uploaded files
+backend/uploads/
+*.csv
+*.pdf
+
+# System files
+.DS_Store
