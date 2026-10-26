@@ -9,16 +9,13 @@ const transporter = nodemailer.createTransport({
     auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
 });
 
-// Ab ye specific bachhe ke bajaye PURI CLASS ka result nikalega
 exports.publishResult = async (req, res) => {
     const { course_class, semester } = req.body;
     if (!course_class || !semester) return res.status(400).json({ message: "Class & Semester required." });
 
     try {
-        // Us class aur sem ke sabhi students ko dhoondo
-        const [students] = await db.query('SELECT user_id, name, email, parent_email FROM users WHERE role = "student" AND course_class = ? AND semester = ?', [course_class, semester]);
-
-        if (students.length === 0) return res.status(404).json({ message: "No students found in this class & semester." });
+        const [students] = await db.query('SELECT user_id, name, email, parent_email, father_name, dob FROM users WHERE role = "student" AND course_class = ?', [course_class]);
+        if (students.length === 0) return res.status(404).json({ message: "No students found in this class." });
 
         let emailsSent = 0;
 
@@ -27,26 +24,70 @@ exports.publishResult = async (req, res) => {
             const [marks] = await db.query('SELECT subject_name, marks_obtained, total_marks FROM results WHERE student_id = ? AND semester = ?', [student_id, semester]);
 
             if (marks.length > 0) {
-                // Generate PDF
-                const doc = new PDFDocument();
-                const pdfPath = path.join(__dirname, '../uploads/', `${student_id}_Result.pdf`);
+                const doc = new PDFDocument({ margin: 50 });
+                const pdfPath = path.join(__dirname, '../uploads/', `${student_id}_Sem_${semester}.pdf`);
                 doc.pipe(fs.createWriteStream(pdfPath));
 
-                doc.fontSize(22).text('RESULT - LALITA SINGH INSTITUTE', { align: 'center' }).moveDown();
-                doc.fontSize(14).text(`Student Name: ${student.name}`);
-                doc.text(`Roll No: ${student_id} | Class: ${course_class} | Sem: ${semester}`).moveDown();
-                doc.text('----------------------------------------------------');
+                // --- BEAUTIFUL PDF FORMATTING ---
+                doc.fontSize(22).font('Helvetica-Bold').fillColor('#1e3a8a').text('SMART RESULT MANAGEMENT SYSTEM', { align: 'center' });
+                doc.fontSize(12).font('Helvetica').fillColor('#64748b').text('Official Academic Marksheet', { align: 'center' }).moveDown(2);
 
+                // Student Details Box
+                doc.rect(50, 120, 500, 90).stroke('#cbd5e1');
+                doc.fillColor('#000').fontSize(11).font('Helvetica-Bold').text('STUDENT PROFILE', 60, 130);
+                doc.font('Helvetica').fontSize(10);
+
+                // Left Column
+                doc.text(`Name: ${student.name}`, 60, 150);
+                doc.text(`Roll No: ${student_id}`, 60, 170);
+                doc.text(`Class: ${course_class}`, 60, 190);
+
+                // Right Column
+                doc.text(`Semester: ${semester}`, 300, 150);
+                doc.text(`Father's Name: ${student.father_name || '-'}`, 300, 170);
+                let dobText = student.dob ? new Date(student.dob).toLocaleDateString() : '-';
+                doc.text(`Date of Birth: ${dobText}`, 300, 190);
+
+                doc.moveDown(4);
+
+                // Marks Table Header
+                doc.font('Helvetica-Bold').fontSize(11);
+                doc.text('SUBJECT', 60, 240);
+                doc.text('MAX MARKS', 300, 240);
+                doc.text('OBTAINED', 420, 240);
+                doc.moveTo(50, 260).lineTo(550, 260).stroke('#cbd5e1');
+
+                let y = 275;
                 let totalObtained = 0, grandTotal = 0;
-                marks.forEach(m => {
-                    doc.text(`${m.subject_name} :  ${m.marks_obtained} / ${m.total_marks}`);
-                    totalObtained += m.marks_obtained; grandTotal += m.total_marks;
-                });
-                doc.text('----------------------------------------------------').moveDown();
-                doc.text(`Total: ${totalObtained} / ${grandTotal} | Percentage: ${((totalObtained / grandTotal) * 100).toFixed(2)}%`);
-                doc.end();
 
-                // Parents aur Student dono ko bhejna (comma separated)
+                doc.font('Helvetica').fontSize(10);
+                marks.forEach(m => {
+                    doc.text(m.subject_name, 60, y);
+                    doc.text(m.total_marks.toString(), 300, y);
+                    doc.text(m.marks_obtained.toString(), 420, y);
+                    totalObtained += m.marks_obtained;
+                    grandTotal += m.total_marks;
+                    y += 20;
+                });
+
+                doc.moveTo(50, y).lineTo(550, y).stroke('#cbd5e1');
+                y += 15;
+
+                // Final Score & Percentage
+                doc.font('Helvetica-Bold').fontSize(11).text('TOTAL:', 60, y);
+                doc.text(grandTotal.toString(), 300, y);
+                doc.text(totalObtained.toString(), 420, y);
+
+                const percentage = ((totalObtained / grandTotal) * 100).toFixed(2);
+                y += 35;
+                doc.fontSize(14).fillColor('#1e3a8a').text(`PERCENTAGE: ${percentage}%`, 60, y);
+
+                const isPass = percentage >= 33;
+                doc.fillColor(isPass ? 'green' : 'red').text(`STATUS: ${isPass ? 'PASS' : 'FAIL'}`, 400, y);
+
+                doc.end();
+                // --- END PDF FORMATTING ---
+
                 let toEmails = [];
                 if (student.email) toEmails.push(student.email);
                 if (student.parent_email) toEmails.push(student.parent_email);
@@ -56,19 +97,17 @@ exports.publishResult = async (req, res) => {
                         from: process.env.EMAIL_USER,
                         to: toEmails.join(','),
                         subject: `Result Declared: ${course_class} - Semester ${semester}`,
-                        text: `Dear ${student.name} and Parents,\nPlease find the attached marksheet.`,
-                        attachments: [{ filename: `${student_id}_Result.pdf`, path: pdfPath }]
+                        text: `Dear ${student.name} and Parents,\nPlease find the attached official marksheet for Semester ${semester}.`,
+                        attachments: [{ filename: `${student_id}_Sem_${semester}.pdf`, path: pdfPath }]
                     });
                     emailsSent++;
                 }
-                setTimeout(() => { if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath); }, 2000);
+                setTimeout(() => { if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath); }, 2500);
             }
         }
 
-        // Home Page ke Notice Board me Notice add karna
         await db.query(`INSERT INTO notices (title, date_posted) VALUES (?, CURDATE())`, [`🎉 Result Announced for ${course_class} - Semester ${semester}`]);
-
-        res.status(200).json({ message: `Successfully emailed results to ${emailsSent} students/parents and updated Notice Board!` });
+        res.status(200).json({ message: `Successfully emailed printed marksheets to ${emailsSent} students/parents!` });
 
     } catch (error) {
         console.error(error);

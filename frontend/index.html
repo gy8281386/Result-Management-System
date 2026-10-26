@@ -4,106 +4,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lalita Singh - Result Management System</title>
+    <title>Smart Result Management System</title>
     <style>
         :root {
-            --primary: #0f172a;
-            --secondary: #3b82f6;
-            --bg: #f1f5f9;
-            --text: #1e293b;
+            --primary-grad: linear-gradient(135deg, #1e3a8a 0%, #4338ca 50%, #7c3aed 100%);
+            --primary-dark: #1e1b4b;
+            --secondary: #4f46e5;
+            --secondary-hover: #4338ca;
+            --accent: #22d3ee;
+            --bg: #f8fafc;
+            --text: #334155;
             --card: #ffffff;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
-            background: var(--primary);
+            background: var(--primary-grad);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1.2rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .highlight {
+            color: var(--accent);
         }
 
         .btn {
             background: var(--secondary);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.7rem 1.4rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
         .btn:hover {
-            background: #2563eb;
+            background: var(--secondary-hover);
+            transform: translateY(-2px);
         }
 
-        /* HOME PAGE SPLIT LAYOUT */
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
         .home-container {
             display: flex;
+            flex-wrap: wrap;
             max-width: 1200px;
             margin: 3rem auto;
-            gap: 2rem;
-            padding: 0 1rem;
+            gap: 2.5rem;
+            padding: 0 1.5rem;
+            flex: 1;
         }
 
         .notices-section {
-            flex: 6;
+            flex: 1.5;
+            min-width: 300px;
             background: var(--card);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--secondary);
         }
 
         .login-section {
-            flex: 4;
+            flex: 1;
+            min-width: 300px;
             background: var(--card);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--accent);
         }
 
         .notice-item {
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid #0ea5e9;
-            border-radius: 4px;
-            font-weight: bold;
+            background: #f5f3ff;
+            color: #4c1d95;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid #8b5cf6;
+            border-radius: 8px;
+            font-weight: 600;
         }
 
-        /* DASHBOARD LAYOUT */
         .dashboard-container {
             max-width: 1100px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
         }
 
         .card {
             background: var(--card);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2.5rem;
+        }
+
+        .dashboard-title {
+            color: var(--primary-dark);
+            font-size: 2rem;
             margin-bottom: 2rem;
+            border-bottom: 3px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 5px;
         }
 
         input,
         select,
         button.full-btn {
             width: 100%;
-            padding: 0.75rem;
-            margin: 0.5rem 0 1rem;
+            padding: 0.9rem;
+            margin: 0.5rem 0 1.5rem;
             border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            box-sizing: border-box;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            background-color: #f8fafc;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--secondary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
 
         .full-btn {
@@ -112,161 +173,238 @@
             font-weight: bold;
             cursor: pointer;
             border: none;
+            font-size: 1.1rem;
+        }
+
+        .full-btn:hover {
+            background: var(--secondary-hover);
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .hidden {
-            display: none !important;
+            gap: 0 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         th,
         td {
-            padding: 0.75rem;
+            padding: 1.2rem;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
         }
 
         th {
             background: #f1f5f9;
+            font-weight: 700;
+            color: #1e293b;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* STUDENT PROFILE DETAILS */
+        .student-profile-header {
+            background: #e0e7ff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--secondary);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .student-profile-header div {
+            font-size: 1.05rem;
+        }
+
+        .student-profile-header span {
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .sem-block {
+            margin-top: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .sem-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-dark);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
 
         .toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #10b981;
+            top: 25px;
+            right: 25px;
+            background: var(--success);
             color: white;
-            padding: 1rem;
-            border-radius: 4px;
+            padding: 1.2rem 2.5rem;
+            border-radius: 8px;
             display: none;
             z-index: 1000;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printArea,
+            #printArea * {
+                visibility: visible;
+            }
+
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .print-header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .print-header h1 {
+                color: #1e3a8a !important;
+                margin: 0;
+            }
+
+            .print-box {
+                border: 2px solid #333;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 8px;
+            }
+
+            .print-table th {
+                background: #eee !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <header>
-        <h2>🎓 University Result Portal</h2>
-        <button id="logoutBtn" class="btn hidden" onclick="logout()">Logout</button>
+    <header class="no-print">
+        <h2>🎓 <span class="highlight">Smart</span> Result Management System</h2>
+        <button id="logoutBtn" class="btn btn-danger hidden" onclick="logout()">Logout</button>
     </header>
 
-    <div id="toast" class="toast">Message here</div>
+    <div id="toast" class="toast no-print">Message here</div>
 
-    <!-- MAIN HOME PAGE -->
-    <div id="homeSection" class="home-container">
+    <!-- HOME PAGE -->
+    <div id="homeSection" class="home-container no-print">
         <div class="notices-section">
-            <h2 style="color: var(--primary); border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;">📢 Latest
-                Announcements</h2>
+            <h2
+                style="color: var(--primary-dark); border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-top: 0;">
+                📢 Latest Announcements</h2>
             <div id="noticeList">
-                <!-- Notices will load here -->
+                <p>Loading announcements...</p>
             </div>
         </div>
-
         <div class="login-section">
-            <h3 style="margin-top: 0; text-align: center;">Secure Login</h3>
+            <h2 style="margin-top: 0; text-align: center; color: var(--primary-dark);">Secure Login</h2>
             <form onsubmit="handleLogin(event)">
-                <label>User ID / Roll No</label>
-                <input type="text" id="loginId" required placeholder="Enter ID">
-
-                <label>Password</label>
-                <input type="password" id="loginPass" required placeholder="Enter Password">
-
+                <label>User ID / Roll No</label> <input type="text" id="loginId" required>
+                <label>Password</label> <input type="password" id="loginPass" required>
                 <label>Role</label>
                 <select id="loginRole">
                     <option value="student">Student</option>
                     <option value="teacher">Teacher</option>
                     <option value="admin">Admin</option>
                 </select>
-
-                <button type="submit" class="full-btn">Sign In</button>
+                <button type="submit" class="full-btn">Sign In to Portal</button>
             </form>
         </div>
     </div>
 
-    <!-- DASHBOARDS -->
-    <div class="dashboard-container">
+    <div class="dashboard-container no-print">
 
         <!-- ADMIN DASHBOARD -->
         <div id="adminDashboard" class="hidden">
-            <h2>Admin Control Panel ⚙️</h2>
-
+            <h2 class="dashboard-title">Admin Control Panel ⚙️</h2>
             <div class="card">
                 <h3>Register New Student</h3>
                 <form onsubmit="handleAddStudent(event)">
                     <div class="form-grid">
-                        <input type="text" id="s_id" placeholder="Roll Number (User ID)" required>
-                        <input type="text" id="s_name" placeholder="Student Name" required>
-                        <input type="text" id="s_fname" placeholder="Father's Name" required>
-                        <input type="text" id="s_mname" placeholder="Mother's Name" required>
-                        <input type="email" id="s_email" placeholder="Student Email" required>
-                        <input type="email" id="s_pemail" placeholder="Parents Email" required>
-                        <input type="text" id="s_phone" placeholder="Phone Number" required>
-                        <input type="date" id="s_dob" required>
-                        <select id="s_class">
-                            <option value="BTech">B.Tech</option>
-                            <option value="BCA">BCA</option>
-                            <option value="BBA">BBA</option>
-                        </select>
-                        <select id="s_sem">
-                            <option value="1">Semester 1</option>
-                            <option value="2">Semester 2</option>
-                            <option value="3">Semester 3</option>
-                            <option value="4">Semester 4</option>
-                            <option value="5">Semester 5</option>
-                            <option value="6">Semester 6</option>
-                            <option value="7">Semester 7</option>
-                            <option value="8">Semester 8</option>
-                        </select>
-                        <input type="text" id="s_address" placeholder="Address" style="grid-column: span 2;">
-                        <input type="password" id="s_pass" placeholder="Set Login Password" style="grid-column: span 2;"
-                            required>
+                        <div><label>Roll Number</label><input type="text" id="s_id" required></div>
+                        <div><label>Full Name</label><input type="text" id="s_name" required></div>
+                        <div><label>Father's Name</label><input type="text" id="s_fname" required></div>
+                        <div><label>Mother's Name</label><input type="text" id="s_mname" required></div>
+                        <div><label>Student Email</label><input type="email" id="s_email" required></div>
+                        <div><label>Parents Email</label><input type="email" id="s_pemail" required></div>
+                        <div><label>Phone Number</label><input type="text" id="s_phone" required></div>
+                        <div><label>Date of Birth</label><input type="date" id="s_dob" required></div>
+                        <div><label>Class</label><select id="s_class">
+                                <option value="BTech">B.Tech</option>
+                                <option value="BCA">BCA</option>
+                            </select></div>
+                        <div>
+                            <label>Semester</label>
+                            <select id="s_sem">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                        <div style="grid-column: 1 / -1;"><label>Full Address</label><input type="text" id="s_address">
+                        </div>
+                        <div style="grid-column: 1 / -1;"><label>Set Login Password</label><input type="password"
+                                id="s_pass" required></div>
                     </div>
                     <button type="submit" class="full-btn">Register Student</button>
                 </form>
             </div>
 
-            <div class="card">
-                <h3>Register New Teacher</h3>
-                <form onsubmit="handleAddTeacher(event)">
-                    <div class="form-grid">
-                        <input type="text" id="t_id" placeholder="Teacher ID" required>
-                        <input type="text" id="t_name" placeholder="Teacher Name" required>
-                        <input type="text" id="t_fname" placeholder="Father's Name" required>
-                        <input type="date" id="t_dob" required>
-                        <input type="email" id="t_email" placeholder="Email Address" required>
-                        <input type="text" id="t_phone" placeholder="Phone Number" required>
-                        <input type="text" id="t_qual" placeholder="Qualification (e.g. M.Tech, PhD)"
-                            style="grid-column: span 2;" required>
-                        <input type="password" id="t_pass" placeholder="Set Login Password" style="grid-column: span 2;"
-                            required>
-                    </div>
-                    <button type="submit" class="full-btn">Register Teacher</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h3>Publish Full Semester Result (Bulk Email)</h3>
+            <div class="card" style="border: 2px solid var(--success); background: #f0fdf4;">
+                <h3 style="color: var(--success); margin-top: 0;">Publish Full Semester Result (Bulk Email)</h3>
                 <form onsubmit="handlePublishBulk(event)">
                     <div class="form-grid">
                         <select id="pub_class" required>
-                            <option value="">Select Class</option>
+                            <option value="">-- Select Class --</option>
                             <option value="BTech">B.Tech</option>
                             <option value="BCA">BCA</option>
                         </select>
                         <select id="pub_sem" required>
-                            <option value="">Select Semester</option>
+                            <option value="">-- Select Semester --</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -277,44 +415,120 @@
                             <option value="8">8</option>
                         </select>
                     </div>
-                    <button type="submit" class="full-btn" style="background: #10b981;">Publish & Email All
-                        Parents/Students</button>
+                    <button type="submit" class="full-btn btn-success">Publish & Email Marksheets</button>
                 </form>
             </div>
         </div>
 
         <!-- TEACHER DASHBOARD -->
         <div id="teacherDashboard" class="hidden">
-            <h2>Teacher Portal 👨‍🏫</h2>
-            <div class="card">
-                <h3>Upload Marks CSV (Auto-fetches Class & Sem)</h3>
+            <h2 class="dashboard-title">Teacher Portal 👨‍🏫</h2>
+
+            <!-- CSV UPLOAD -->
+            <div class="card" style="border-top: 4px solid var(--secondary);">
+                <h3 style="margin-top: 0;">Upload Bulk Marks (CSV)</h3>
                 <form onsubmit="handleBulkUpload(event)">
-                    <input type="file" id="csvFile" accept=".csv" required>
-                    <button type="submit" class="full-btn">Upload CSV File</button>
+                    <div class="form-grid">
+                        <div>
+                            <label>Select Class</label>
+                            <select id="csv_class" required>
+                                <option value="BTech">B.Tech</option>
+                                <option value="BCA">BCA</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Select Semester</label>
+                            <select id="csv_sem" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="file" id="csvFile" accept=".csv" required
+                        style="padding: 1rem; border: 2px dashed #cbd5e1;">
+                    <button type="submit" class="full-btn">Upload & Save CSV</button>
                 </form>
-                <small style="color: red;">CSV Columns must be: student_id, subject_name, marks_obtained,
+                <small style="color: var(--danger);">CSV MUST have only: student_id, subject_name, marks_obtained,
                     total_marks</small>
+            </div>
+
+            <!-- MANUAL ENTRY (DYNAMIC TABLE) -->
+            <div class="card" style="border-top: 4px solid var(--accent);">
+                <h3 style="margin-top: 0;">Manual Marks Entry</h3>
+                <form onsubmit="handleManualMarksUpload(event)">
+                    <div class="form-grid">
+                        <div><label>Student Roll No</label><input type="text" id="m_std_id" required></div>
+                        <div><label>Class</label><select id="m_class">
+                                <option value="BTech">B.Tech</option>
+                                <option value="BCA">BCA</option>
+                            </select></div>
+                        <div style="grid-column: 1 / -1;">
+                            <label>Semester</label>
+                            <select id="m_sem">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 5px;">Subject Marks Table</h4>
+                    <table id="manualMarksTable" style="margin-top:0;">
+                        <thead>
+                            <tr>
+                                <th>Subject Name</th>
+                                <th>Marks Obtained</th>
+                                <th>Total Marks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="manualMarksBody">
+                            <tr>
+                                <td><input type="text" class="m_sub_name" required style="margin:0;"></td>
+                                <td><input type="number" class="m_sub_obt" required style="margin:0;"></td>
+                                <td><input type="number" class="m_sub_tot" value="100" required style="margin:0;"></td>
+                                <td><button type="button" class="btn btn-danger"
+                                        onclick="this.closest('tr').remove()">X</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn" style="margin-top:10px; background:#475569;"
+                        onclick="addSubjectRow()">+ Add Another Subject</button>
+
+                    <button type="submit" class="full-btn" style="margin-top: 20px;">Save Marks to Database</button>
+                </form>
             </div>
         </div>
 
         <!-- STUDENT DASHBOARD -->
         <div id="studentDashboard" class="hidden">
-            <h2>My Dashboard 📊</h2>
+            <h2 class="dashboard-title">My Academic Dashboard 📊</h2>
             <div class="card">
-                <button onclick="fetchMyResults()" class="btn" style="margin-bottom: 1rem;">Load My Results</button>
-                <table id="resultTable">
-                    <thead>
-                        <tr>
-                            <th>Semester</th>
-                            <th>Subject</th>
-                            <th>Marks Obtained</th>
-                            <th>Total Marks</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultBody"></tbody>
-                </table>
+                <!-- Profile Section gets injected here -->
+                <div id="studentProfileArea"></div>
+
+                <h3 style="margin-top: 30px; border-bottom: 2px solid var(--accent); padding-bottom:10px;">Semester
+                    Results (Series Wise)</h3>
+                <!-- Dynamic Semester Blocks get injected here -->
+                <div id="studentResultsArea"></div>
             </div>
         </div>
+    </div>
+
+    <!-- INVISIBLE PRINT AREA -->
+    <div id="printArea" class="hidden">
+        <!-- Will be populated dynamically by JS just before printing -->
     </div>
 
     <script>
@@ -323,117 +537,217 @@
 
         function showToast(message, isError = false) {
             const t = document.getElementById('toast');
-            t.textContent = message; t.style.background = isError ? '#ef4444' : '#10b981';
-            t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 4000);
+            t.textContent = message; t.style.background = isError ? 'var(--danger)' : 'var(--success)';
+            t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        // LOAD NOTICES ON HOME PAGE
         async function loadNotices() {
             try {
-                const res = await fetch(`${API_BASE}/notices`); // Needs to exist in server.js!
-                const data = await res.json();
-                const list = document.getElementById('noticeList');
-                list.innerHTML = '';
-                if (data.length === 0) list.innerHTML = '<p>No announcements yet.</p>';
+                const res = await fetch(`${API_BASE}/notices`); const data = await res.json();
+                const list = document.getElementById('noticeList'); list.innerHTML = '';
+                if (data.length === 0) { list.innerHTML = '<p>No recent announcements.</p>'; return; }
                 data.forEach(n => {
-                    let d = new Date(n.date_posted).toLocaleDateString();
-                    list.innerHTML += `<div class="notice-item">${n.title} <br><small style="color:#64748b;">Posted on: ${d}</small></div>`;
+                    let d = new Date(n.date_posted).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                    list.innerHTML += `<div class="notice-item">${n.title} <br><small style="color:#64748b;">${d}</small></div>`;
                 });
-            } catch (e) { console.log("Notices not loaded."); }
+            } catch (e) { }
         }
 
-        // LOGIN
         async function handleLogin(e) {
             e.preventDefault();
             const body = { user_id: document.getElementById('loginId').value, password: document.getElementById('loginPass').value, role: document.getElementById('loginRole').value };
             try {
                 const res = await fetch(`${API_BASE}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
                 const data = await res.json();
-                if (res.ok) {
-                    localStorage.setItem('token', data.token); localStorage.setItem('role', body.role);
-                    showToast('Login Successful!'); showDashboard(body.role);
-                } else showToast(data.message, true);
-            } catch (err) { showToast('Server connection error.', true); }
+                if (res.ok) { localStorage.setItem('token', data.token); localStorage.setItem('role', body.role); showDashboard(body.role); }
+                else showToast(data.message, true);
+            } catch (err) { showToast('Server Error', true); }
         }
 
         function showDashboard(role) {
-            document.getElementById('homeSection').classList.add('hidden');
-            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('homeSection').classList.add('hidden'); document.getElementById('logoutBtn').classList.remove('hidden');
             if (role === 'admin') document.getElementById('adminDashboard').classList.remove('hidden');
             if (role === 'teacher') document.getElementById('teacherDashboard').classList.remove('hidden');
-            if (role === 'student') { document.getElementById('studentDashboard').classList.remove('hidden'); fetchMyResults(); }
+            if (role === 'student') { document.getElementById('studentDashboard').classList.remove('hidden'); loadStudentDashboard(); }
         }
-
         function logout() { localStorage.clear(); location.reload(); }
 
-        // ADMIN: ADD STUDENT
-        async function handleAddStudent(e) {
-            e.preventDefault();
-            const body = {
-                role: 'student', user_id: document.getElementById('s_id').value, name: document.getElementById('s_name').value,
-                father_name: document.getElementById('s_fname').value, mother_name: document.getElementById('s_mname').value,
-                email: document.getElementById('s_email').value, parent_email: document.getElementById('s_pemail').value,
-                phone: document.getElementById('s_phone').value, dob: document.getElementById('s_dob').value,
-                course_class: document.getElementById('s_class').value, semester: document.getElementById('s_sem').value,
-                address: document.getElementById('s_address').value, password: document.getElementById('s_pass').value
-            };
-            await sendPostReq(`${API_BASE}/admin/add-user`, body, e.target);
+        // TEACHER: ADD ROW IN MANUAL TABLE
+        function addSubjectRow() {
+            const tbody = document.getElementById('manualMarksBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="m_sub_name" required style="margin:0;"></td>
+                <td><input type="number" class="m_sub_obt" required style="margin:0;"></td>
+                <td><input type="number" class="m_sub_tot" value="100" required style="margin:0;"></td>
+                <td><button type="button" class="btn btn-danger" onclick="this.closest('tr').remove()">X</button></td>
+            `;
+            tbody.appendChild(tr);
         }
 
-        // ADMIN: ADD TEACHER
-        async function handleAddTeacher(e) {
+        // TEACHER: MANUAL UPLOAD ARRAY
+        async function handleManualMarksUpload(e) {
             e.preventDefault();
-            const body = {
-                role: 'teacher', user_id: document.getElementById('t_id').value, name: document.getElementById('t_name').value,
-                father_name: document.getElementById('t_fname').value, dob: document.getElementById('t_dob').value,
-                email: document.getElementById('t_email').value, phone: document.getElementById('t_phone').value,
-                qualification: document.getElementById('t_qual').value, password: document.getElementById('t_pass').value
-            };
-            await sendPostReq(`${API_BASE}/admin/add-user`, body, e.target);
+            const student_id = document.getElementById('m_std_id').value;
+            const course_class = document.getElementById('m_class').value;
+            const semester = document.getElementById('m_sem').value;
+
+            const subjects = [];
+            document.querySelectorAll('#manualMarksBody tr').forEach(row => {
+                const name = row.querySelector('.m_sub_name').value;
+                const obt = row.querySelector('.m_sub_obt').value;
+                const tot = row.querySelector('.m_sub_tot').value;
+                if (name && obt) subjects.push({ subject_name: name, marks_obtained: obt, total_marks: tot });
+            });
+
+            if (subjects.length === 0) return showToast("Add at least one subject row!", true);
+
+            const body = { student_id, course_class, semester, subjects };
+            await sendPostReq(`${API_BASE}/teacher/add-marks`, body, e.target);
+            document.getElementById('manualMarksBody').innerHTML = '<tr><td><input type="text" class="m_sub_name" required style="margin:0;"></td><td><input type="number" class="m_sub_obt" required style="margin:0;"></td><td><input type="number" class="m_sub_tot" value="100" required style="margin:0;"></td><td><button type="button" class="btn btn-danger" onclick="this.closest(\'tr\').remove()">X</button></td></tr>';
         }
 
-        // ADMIN: BULK PUBLISH
-        async function handlePublishBulk(e) {
-            e.preventDefault();
-            showToast("Generating PDFs & Mailing Parents... Please wait (Do not close).");
-            const body = { course_class: document.getElementById('pub_class').value, semester: document.getElementById('pub_sem').value };
-            await sendPostReq(`${API_BASE}/admin/publish-result`, body, e.target);
-            loadNotices(); // Reload notices immediately
-        }
-
-        // TEACHER: CSV UPLOAD
+        // TEACHER: BULK UPLOAD
         async function handleBulkUpload(e) {
             e.preventDefault();
-            const formData = new FormData(); formData.append('file', document.getElementById('csvFile').files[0]);
-            showToast("Uploading and syncing marks...");
+            const formData = new FormData();
+            formData.append('course_class', document.getElementById('csv_class').value);
+            formData.append('semester', document.getElementById('csv_sem').value);
+            formData.append('file', document.getElementById('csvFile').files[0]);
+
+            showToast("Uploading...");
             const res = await fetch(`${API_BASE}/teacher/bulk-upload`, { method: 'POST', headers: { 'Authorization': `Bearer ${getToken()}` }, body: formData });
-            const data = await res.json();
-            showToast(data.message, !res.ok);
-            if (res.ok) e.target.reset();
+            const data = await res.json(); showToast(data.message, !res.ok); if (res.ok) e.target.reset();
         }
 
-        // STUDENT: GET RESULTS
-        async function fetchMyResults() {
-            const res = await fetch(`${API_BASE}/student/my-results`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
-            const data = await res.json();
-            const tbody = document.getElementById('resultBody'); tbody.innerHTML = '';
-            if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4">No results found yet.</td></tr>'; return; }
-            data.forEach(r => tbody.innerHTML += `<tr><td>Sem ${r.semester}</td><td>${r.subject_name}</td><td><strong>${r.marks_obtained}</strong></td><td>${r.total_marks}</td></tr>`);
+        // STUDENT DASHBOARD: Load Profile & Grouped Results
+        let globalStudentProfile = {};
+        let globalGroupedResults = {};
+
+        async function loadStudentDashboard() {
+            const pRes = await fetch(`${API_BASE}/student/profile`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+            if (pRes.ok) {
+                const profile = await pRes.json();
+                globalStudentProfile = profile;
+                const dob = new Date(profile.dob).toLocaleDateString();
+                document.getElementById('studentProfileArea').innerHTML = `
+                    <div class="student-profile-header">
+                        <div><span>Name:</span> ${profile.name}</div>
+                        <div><span>Roll No:</span> ${profile.user_id}</div>
+                        <div><span>Course:</span> ${profile.course_class}</div>
+                        <div><span>Current Sem:</span> ${profile.semester}</div>
+                        <div><span>Father's Name:</span> ${profile.father_name || 'N/A'}</div>
+                        <div><span>Mother's Name:</span> ${profile.mother_name || 'N/A'}</div>
+                        <div><span>Phone:</span> ${profile.phone || 'N/A'}</div>
+                        <div><span>DOB:</span> ${dob || 'N/A'}</div>
+                    </div>
+                `;
+            }
+
+            const rRes = await fetch(`${API_BASE}/student/my-results`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+            if (rRes.ok) {
+                const data = await rRes.json();
+                const area = document.getElementById('studentResultsArea');
+                area.innerHTML = '';
+
+                if (data.length === 0) { area.innerHTML = '<p>No results published yet.</p>'; return; }
+
+                globalGroupedResults = data.reduce((acc, curr) => {
+                    (acc[curr.semester] = acc[curr.semester] || []).push(curr);
+                    return acc;
+                }, {});
+
+                Object.keys(globalGroupedResults).sort((a, b) => b - a).forEach(sem => {
+                    const marks = globalGroupedResults[sem];
+                    let rows = '', tObt = 0, tTot = 0;
+                    marks.forEach(m => {
+                        rows += `<tr><td>${m.subject_name}</td><td><strong>${m.marks_obtained}</strong></td><td>${m.total_marks}</td></tr>`;
+                        tObt += m.marks_obtained; tTot += m.total_marks;
+                    });
+                    const percent = ((tObt / tTot) * 100).toFixed(2);
+                    const status = percent >= 33 ? '<span style="color:green">PASS</span>' : '<span style="color:red">FAIL</span>';
+
+                    area.innerHTML += `
+                        <div class="sem-block">
+                            <div class="sem-title">
+                                <span>Semester ${sem} Results</span>
+                                <button class="btn" style="background:white; color:var(--primary-dark);" onclick="printMarksheet('${sem}')">🖨️ Print Marksheet</button>
+                            </div>
+                            <table class="print-table">
+                                <thead><tr><th>Subject Name</th><th>Marks Obtained</th><th>Total Marks</th></tr></thead>
+                                <tbody>${rows}</tbody>
+                            </table>
+                            <div style="margin-top:15px; font-size:1.1rem; display:flex; justify-content:space-between; background:#f1f5f9; padding:10px; border-radius:6px;">
+                                <span><strong>Total:</strong> ${tObt} / ${tTot}</span>
+                                <span><strong>Percentage:</strong> ${percent}%</span>
+                                <span><strong>Status:</strong> ${status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
         }
 
-        // HELPER for POST requests
+        // PRINT SPECIFIC SEMESTER
+        function printMarksheet(semester) {
+            const printDiv = document.getElementById('printArea');
+            const p = globalStudentProfile;
+            const marks = globalGroupedResults[semester];
+            const dob = new Date(p.dob).toLocaleDateString();
+
+            let rows = '', tObt = 0, tTot = 0;
+            marks.forEach(m => {
+                rows += `<tr><td>${m.subject_name}</td><td>${m.marks_obtained}</td><td>${m.total_marks}</td></tr>`;
+                tObt += m.marks_obtained; tTot += m.total_marks;
+            });
+            const percent = ((tObt / tTot) * 100).toFixed(2);
+            const status = percent >= 33 ? 'PASS' : 'FAIL';
+
+            printDiv.innerHTML = `
+                <div class="print-header">
+                    <h1>SMART RESULT MANAGEMENT SYSTEM</h1>
+                    <p style="font-size:1.2rem;">Official Academic Marksheet</p>
+                </div>
+                <div class="print-box">
+                    <h3 style="margin-top:0; border-bottom:1px solid #ccc; padding-bottom:5px;">STUDENT PROFILE</h3>
+                    <div style="display:flex; justify-content:space-between; font-size:1.1rem; margin-top:10px;">
+                        <div>
+                            <p><strong>Name:</strong> ${p.name}</p>
+                            <p><strong>Roll No:</strong> ${p.user_id}</p>
+                            <p><strong>Course:</strong> ${p.course_class}</p>
+                        </div>
+                        <div>
+                            <p><strong>Semester:</strong> ${semester}</p>
+                            <p><strong>Father's Name:</strong> ${p.father_name || '-'}</p>
+                            <p><strong>Date of Birth:</strong> ${dob || '-'}</p>
+                        </div>
+                    </div>
+                </div>
+                <table class="print-table" style="width:100%; border-collapse:collapse; margin-top:20px;" border="1">
+                    <thead><tr style="text-align:left;"><th>SUBJECT</th><th>MARKS OBTAINED</th><th>TOTAL MARKS</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+                <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:bold; margin-top:20px; padding-top:10px; border-top:2px solid #000;">
+                    <span>Total Marks: ${tObt} / ${tTot}</span>
+                    <span>Percentage: ${percent}%</span>
+                    <span>Result: ${status}</span>
+                </div>
+            `;
+
+            printDiv.classList.remove('hidden');
+            window.print();
+            printDiv.classList.add('hidden');
+        }
+
         async function sendPostReq(url, bodyData, formElement) {
             const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify(bodyData) });
-            const data = await res.json();
-            showToast(data.message, !res.ok);
-            if (res.ok) formElement.reset();
+            const data = await res.json(); showToast(data.message, !res.ok); if (res.ok) formElement.reset();
         }
 
-        window.onload = () => {
-            loadNotices(); // Always load notices on start
-            const role = localStorage.getItem('role');
-            if (getToken() && role) showDashboard(role);
-        };
+        async function handleAddStudent(e) { e.preventDefault(); const body = { role: 'student', user_id: document.getElementById('s_id').value, name: document.getElementById('s_name').value, father_name: document.getElementById('s_fname').value, mother_name: document.getElementById('s_mname').value, email: document.getElementById('s_email').value, parent_email: document.getElementById('s_pemail').value, phone: document.getElementById('s_phone').value, dob: document.getElementById('s_dob').value, course_class: document.getElementById('s_class').value, semester: document.getElementById('s_sem').value, address: document.getElementById('s_address').value, password: document.getElementById('s_pass').value }; await sendPostReq(`${API_BASE}/admin/add-user`, body, e.target); }
+        async function handlePublishBulk(e) { e.preventDefault(); showToast("Generating PDFs... Please wait."); const body = { course_class: document.getElementById('pub_class').value, semester: document.getElementById('pub_sem').value }; await sendPostReq(`${API_BASE}/admin/publish-result`, body, e.target); loadNotices(); }
+
+        window.onload = () => { loadNotices(); const role = localStorage.getItem('role'); if (getToken() && role) showDashboard(role); };
     </script>
 </body>
 
